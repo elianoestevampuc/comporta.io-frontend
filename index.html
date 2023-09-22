@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Style padrão da página. -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Style do bootstrap. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <title>Comporta.io</title>
+</head>
+
+<body>
+    <!-- Header da página com a barra superior. -->
+    <header>
+        <div class="container">
+            <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+                <a href="/"
+                    class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32">
+                        <use xlink:href="#bootstrap" />
+                    </svg>
+                    <span class="fs-4">Comporta.io</span>
+                </a>
+
+                <button type="button" class="btn btn-primary" onclick="abrirModalCadastroPessoa()">
+                    Adicionar pessoa
+                </button>
+            </header>
+        </div>
+    </header>
+
+    <!-- Section para listagem das pessoas. -->
+    <section>
+        <div class="container text-center">
+            <div class="row  justify-content-center" id="rowPessoas"></div>
+        </div>
+    </section>
+
+    <!-- Modal para mostrar as causas de mudança de comportamento. -->
+    <div class="modal fade" id="modalCausasComportamento" tabindex="-1" aria-labelledby="labelCausasComportamento"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="labelCausasComportamento">Causas de mudança de comportamento</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="causasComportamento"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de cadastro de pessoa. -->
+    <div class="modal fade" id="modalCadastroPessoa" tabindex="-1" aria-labelledby="labelCadastroPessoa"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="labelCadastroPessoa">Cadastrar Pessoa</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="nomePessoa" class="form-label">Nome:</label>
+                            <input type="text" class="form-control" id="nomePessoa" aria-describedby="nomePessoa"
+                                placeholder="Informe o nome da pessoa">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-success" onclick="validarCadastroPessoa()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de cadastro de evento. -->
+    <div class="modal fade" id="modalCadastroEvento" tabindex="-1" aria-labelledby="labelCadastroEvento"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="labelCadastroEvento">
+                        Cadastrar evento para: <span id="nomePessoaEvento"></span>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="nomeEvento" class="form-label">Nome:</label>
+                            <input type="text" class="form-control" id="nomeEvento" aria-describedby="nomeEvento"
+                                placeholder="Informe o nome do evento">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="btnSalvar" class="form-label">&nbsp;</label>
+                            <button type="button" id="btnSalvar" class="btn btn-success form-control"
+                                onclick="validarCadastroEvento()">Salvar</button>
+                        </div>
+                        <div class="col-md-12">
+                            <table id="tblEventos" style="width: 100%;">
+                                <tr>
+                                    <th>Nome</th>
+                                    <th><img src="https://cdn-icons-png.flaticon.com/512/126/126468.png" width="15px"
+                                            height="15px"></th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de cadastro de rotina padrão. -->
+    <div class="modal fade" id="modalCadastroRotinaPadrao" tabindex="-1" aria-labelledby="labelCadastroRotinaPadrao"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="labelCadastroRotinaPadrao">
+                        Cadastrar rotina padrão para: <span id="nomePessoaRotinaPadrao"></span>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="hora" class="form-label">Hora:</label>
+                            <input type="text" data-mask='hh:mm' class="form-control" id="hora" aria-describedby="hora"
+                                placeholder="00:00">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sctEventos" class="form-label">Evento:</label>
+                            <select id="sctEventos" class="form-select">
+                                <option selected value="0">Selecione...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sctDiasSemana" class="form-label">Dia da semana:</label>
+                            <select id="sctDiasSemana" class="form-select">
+                                <option selected value="8">Todos os dias</option>
+                                <option value="9">Seg a Sex</option>
+                                <option value="10">Sab e Dom</option>
+                                <option value="1">Seg</option>
+                                <option value="2">Ter</option>
+                                <option value="3">Qua</option>
+                                <option value="4">Qui</option>
+                                <option value="5">Sex</option>
+                                <option value="6">Sab</option>
+                                <option value="7">Dom</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8"></div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-success form-control"
+                                onclick="validarRotinaPadrao()">Salvar</button>
+                        </div>
+                    </div>
+
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="seg-tab" data-bs-toggle="tab" data-bs-target="#seg"
+                                type="button" role="tab" aria-controls="seg" aria-selected="true">
+                                SEG
+                            </button>
+                            <button class="nav-link" id="ter-tab" data-bs-toggle="tab" data-bs-target="#ter"
+                                type="button" role="tab" aria-controls="ter" aria-selected="false">
+                                TER
+                            </button>
+                            <button class="nav-link" id="qua-tab" data-bs-toggle="tab" data-bs-target="#qua"
+                                type="button" role="tab" aria-controls="qua" aria-selected="false">
+                                QUA
+                            </button>
+                            <button class="nav-link" id="qui-tab" data-bs-toggle="tab" data-bs-target="#qui"
+                                type="button" role="tab" aria-controls="qui" aria-selected="false">
+                                QUI
+                            </button>
+                            <button class="nav-link" id="sex-tab" data-bs-toggle="tab" data-bs-target="#sex"
+                                type="button" role="tab" aria-controls="sex" aria-selected="false">
+                                SEX
+                            </button>
+                            <button class="nav-link" id="sab-tab" data-bs-toggle="tab" data-bs-target="#sab"
+                                type="button" role="tab" aria-controls="sab" aria-selected="false">
+                                SAB
+                            </button>
+                            <button class="nav-link" id="dom-tab" data-bs-toggle="tab" data-bs-target="#dom"
+                                type="button" role="tab" aria-controls="dom" aria-selected="false">
+                                DOM
+                            </button>
+                        </div>
+                    </nav>
+
+                    <div class="col-md-12 scroll">
+                        <table id="tblRotinasPadrao" style="width: 100%;">
+                            <tr>
+                                <th>Hora</th>
+                                <th>Evento</th>
+                                <th><img src="https://cdn-icons-png.flaticon.com/512/126/126468.png" width="15px"
+                                        height="15px"></th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="seg" role="tabpanel" aria-labelledby="seg-tab">
+                        </div>
+                        <div class="tab-pane fade" id="ter" role="tabpanel" aria-labelledby="ter-tab">
+                        </div>
+                        <div class="tab-pane fade" id="qua" role="tabpanel" aria-labelledby="qua-tab">
+                        </div>
+                        <div class="tab-pane fade" id="qui" role="tabpanel" aria-labelledby="qui-tab">
+                        </div>
+                        <div class="tab-pane fade" id="sex" role="tabpanel" aria-labelledby="sex-tab">
+                        </div>
+                        <div class="tab-pane fade" id="sab" role="tabpanel" aria-labelledby="sab-tab">
+                        </div>
+                        <div class="tab-pane fade" id="dom" role="tabpanel" aria-labelledby="sab-dom">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de cadastro de rotina do dia. -->
+    <div class="modal fade" id="modalCadastroRotinaDia" tabindex="-1" aria-labelledby="labelCadastroRotinaDia"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="labelCadastroRotinaPadrao">
+                        Cadastrar rotina do dia para: <span id="nomePessoaRotinaDia"></span>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-primary" onclick="voltarDia()">
+                                << </button>
+                        </div>
+
+                        <div class="col-md-8" style="text-align: center;font-size: 21px;">
+                            <span id="dataAtual"></span>
+                        </div>
+
+                        <div class="col-md-2" style="text-align: right;">
+                            <button type="button" class="btn btn-primary" onclick="avancarDia()">
+                                >> </button>
+                        </div>
+
+                        <div class="col-md-12" style="font-size: 21px;padding: 10px 19px 10px 19px;" id="rowRotinaDia">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lib JS do bootstrap. -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <!-- Lib JS para máscara - Utilizado nos campos de HORA. -->
+    <script src="https://jsuites.net/v4/jsuites.js"></script>
+
+    <!-- Libs JS's da aplicação. -->
+    <script src="index.js"></script>
+    <script src="rotinapadrao.js"></script>
+    <script src="rotinadia.js"></script>
+    <script src="pessoa.js"></script>
+    <script src="evento.js"></script>
+</body>
+
+</html>
